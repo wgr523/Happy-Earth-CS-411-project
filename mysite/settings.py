@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['sp19-cs411-39.cs.illinois.edu']
 # Application definition
 
 INSTALLED_APPS = [
+    'happyearth.apps.HappyearthConfig',
     'simpleIndex.apps.SimpleindexConfig',
     'django.contrib.admin',
     'django.contrib.auth',

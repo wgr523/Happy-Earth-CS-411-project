@@ -1,0 +1,20 @@
+{% if restaurant_list %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Price Level</th>
+    </tr>
+    {% for r in restaurant_list %}
+    <tr>
+        <th>{{ r.id}}</th>
+        <th>{{ r.name }}</th>
+        <th>{{ r.address }}</th>
+        <th>{{ r.price_level }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No restaurants are available.</p>
+{% endif %}
