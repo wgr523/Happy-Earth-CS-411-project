@@ -1,0 +1,24 @@
+{% if user_list %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Religion</th>
+        <th>Not Eat</th>
+        <th>Liked Style</th>
+    </tr>
+    {% for r in user_list %}
+    <tr>
+        <th>{{ r.id}}</th>
+        <th>{{ r.name }}</th>
+        <th>{{ r.phone }}</th>
+        <th>{{ r.religion }}</th>
+        <th>{{ r.not_eat }}</th>
+        <th>{{ r.liked_style }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No users are available.</p>
+{% endif %}

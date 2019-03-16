@@ -1,0 +1,22 @@
+{% if favorites_list %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Dish</th>
+        <th>User</th>
+        <th>Restaurant</th>
+        <th>Tag</th>
+    </tr>
+    {% for r in favorites_list %}
+    <tr>
+        <th>{{ r.id}}</th>
+        <th>{{ r.dish_id }}</th>
+        <th>{{ r.user_id }}</th>
+        <th>{{ r.restaurant_id }}</th>
+        <th>{{ r.tag }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No favorites are available.</p>
+{% endif %}

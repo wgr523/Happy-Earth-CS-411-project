@@ -16,3 +16,18 @@ class RestaurantIndex(generic.ListView):
     def get_queryset(self):
         """Return the last five published questions."""
         return Restaurant.objects.values()
+
+class UserIndex(generic.ListView):
+    context_object_name = 'user_list'
+    def get_queryset(self):
+        return User.objects.values()
+    
+class DishIndex(generic.ListView):
+    context_object_name = 'dish_list'
+    def get_queryset(self):
+        return Dish.objects.values()
+    
+class FavoritesIndex(generic.ListView):
+    context_object_name = 'favorites_list'
+    def get_queryset(self):
+        return Favorites.objects.values()

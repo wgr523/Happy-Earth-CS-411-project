@@ -1,0 +1,20 @@
+{% if dish_list %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Flavor</th>
+        <th>Description</th>
+    </tr>
+    {% for r in dish_list %}
+    <tr>
+        <th>{{ r.id}}</th>
+        <th>{{ r.name }}</th>
+        <th>{{ r.flavor }}</th>
+        <th>{{ r.description }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No dishes are available.</p>
+{% endif %}
