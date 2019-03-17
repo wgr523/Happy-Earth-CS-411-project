@@ -6,6 +6,8 @@ from .models import *
 def fake_index(request):
     return HttpResponse("Happy, earth!")
 
+def reflect_index(request):
+    return HttpResponse(str(request))
 ## def restaurants(request):
 ##     restaurant_list = Restaurant.objects.values()
 ##     context = {'restaurant_list': restaurant_list}
