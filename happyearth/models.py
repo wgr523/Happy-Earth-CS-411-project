@@ -1,19 +1,19 @@
 from django.db import models
 
 class Restaurant(models.Model):
-    name =  models.CharField(max_length=50)
+    name =  models.CharField(max_length=50, unique=True)
     address =  models.CharField(max_length=200)
     price_level = models.IntegerField()
 
 class User(models.Model):
-    name =  models.CharField(max_length=50)
+    name =  models.CharField(max_length=50, unique=True)
     phone =  models.CharField(max_length=50)
     religion = models.CharField(max_length=100)
     not_eat = models.CharField(max_length=200)
     liked_style = models.CharField(max_length=100)
     
 class Dish(models.Model):
-    name =  models.CharField(max_length=50)
+    name =  models.CharField(max_length=50, unique=True)
     flavor =  models.CharField(max_length=50)
     description = models.CharField(max_length=500)
     
