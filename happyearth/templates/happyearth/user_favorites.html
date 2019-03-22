@@ -1,0 +1,34 @@
+<h2>Hello, {{ user.name }}.</h2>
+<h5>Your phone is {{ user.phone }}.</h5>
+<div>
+{% if tag %}
+<table>
+    {% for r in tag %}
+    <tr>
+        <th>{{ r.tag }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No favorites are available.</p>
+{% endif %}
+</div>
+<div> 
+{% if favorites_list %}
+<table>
+    <tr>
+        <th>Restaurant</th>
+        <th>Tag</th>
+    </tr>
+    {% for r in favorites_list %}
+    <tr>
+        <th>{{ r.restaurant }}</th>
+        <th>{{ r.tag }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No favorites are available.</p>
+{% endif %}
+</div> 
+<p><a href="{% url 'logout' %}">logout</a></p>

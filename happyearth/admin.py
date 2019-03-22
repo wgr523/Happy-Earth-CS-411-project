@@ -6,6 +6,8 @@ admin.site.register(Restaurant)
 admin.site.register(User)
 admin.site.register(Dish)
 admin.site.register(Favorites)
+admin.site.register(Comment)
+admin.site.register(Serve)
 
 
 

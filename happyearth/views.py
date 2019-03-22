@@ -14,9 +14,14 @@ def fake_user(request):
             user = User.objects.get(name=username)
         except User.DoesNotExist:
             return HttpResponse('User not in db!')
-        return HttpResponse('Hi, '+username+'! your phone is '+user.phone+'<p><a href="'+reverse('logout')+'">LOGOUT</a></p>')
+        user_info = {"name":user.name, "phone":user.phone}
+        favorites = Favorites.objects.filter(user_id=user.id)
+        favorites_list = map(lambda f:{'restaurant':Restaurant.objects.get(id = f.restaurant_id).name, 'tag':f.tag}, favorites)
+        favorites_tag = favorites.values("tag")
+        context = {'favorites_list': favorites_list, 'user': user_info, 'tag': favorites_tag}
+        return render(request, 'happyearth/user_favorites.html', context)
     else:
-        return HttpResponse("Happy, earth!")
+        return HttpResponse("Not logged in.")
 ## def restaurants(request):
 ##     restaurant_list = Restaurant.objects.values()
 ##     context = {'restaurant_list': restaurant_list}
