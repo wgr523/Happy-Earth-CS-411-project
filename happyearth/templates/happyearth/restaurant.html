@@ -1,0 +1,84 @@
+{% if user.is_authenticated%}
+<h2>Hello, {{ user_info.name }}.</h2>
+<h5>Your phone is {{ user_info.phone }}.</h5>
+{% endif %}
+
+<h2>Restaurant: {{ restaurant.name }}.</h2>
+<h5>Address: {{ restaurant.address }}</h5>
+<h5>Price Level: {{ restaurant.price_level }}</h5>
+
+{% if user.is_authenticated%}
+<div>
+    {% if is_favorite%}
+    <p>Favorited.</p>
+    {% else %}
+    <p><a href="favorite">Add to favorites.</a></p>
+    {% endif %}
+{% if comments_dishes %}
+<p>Your past dishes with comments.</p>
+<table>
+    <tr>
+        <th>Dish</th>
+        <th>Date</th>
+        <th>Rating</th>
+        <th>Review</th>
+    </tr>
+    {% for i in comments_dishes %}
+    <tr>
+        <th>{{ i.name }}</th>
+        <th>{{ i.date }}</th>
+        <th>{{ i.rating }}</th>
+        <th>{{ i.review }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+</div>
+
+<div>
+{% if comments %}
+<p>Your past comments (dish is NULL).</p>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Rating</th>
+        <th>Review</th>
+    </tr>
+    {% for i in comments %}
+    <tr>
+        <th>{{ i.date }}</th>
+        <th>{{ i.rating }}</th>
+        <th>{{ i.review }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+</div>
+{% endif %}
+
+<div>
+{% if dishes %}
+<p>All dishes.</p>
+<table>
+    <tr>
+        <th>Dish</th>
+        <th>Price</th>
+    </tr>
+    {% for i in dishes %}
+    <tr>
+        <th>{{ i.name }}</th>
+        <th>{{ i.price }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+</div>
+{% if user.is_authenticated%}
+<p><a href="comment">Write comment.</a></p>
+<p><a href="edit">Edit comment TODO.</a></p>
+{% endif %}
+{% if user.is_authenticated%}
+<p><a href="{% url 'logout' %}">logout</a></p>
+{% else %}
+<p><a href="{% url 'login' %}">login</a></p>
+{% endif %}

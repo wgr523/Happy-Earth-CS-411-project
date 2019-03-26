@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['sp19-cs411-39.cs.illinois.edu']
 
 INSTALLED_APPS = [
     'happyearth.apps.HappyearthConfig',
-    'simpleIndex.apps.SimpleindexConfig',
+    'accounts.apps.AccountsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'project_0',
+        'NAME': 'project_2',
         'USER': 'test',
         'PASSWORD': 'happy',
         'HOST': 'localhost',

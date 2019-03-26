@@ -1,14 +1,14 @@
 <h2>Hello, {{ user_info.name }}.</h2>
 <h5>Your phone is {{ user_info.phone }}.</h5>
 <div>
-{% if tags %}
+{% if restaurants %}
 <ul>
-    {% for i in tags %}
-        <li><a href="{{ i.tag }}/">{{ i.tag }}</a></li>
+    {% for i in restaurants %}
+        <li><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}</a></li>
     {% endfor %}
 </ul>
 {% else %}
-<p>No favorites are available.</p>
+<p>Error.</p>
 {% endif %}
 </div>
 

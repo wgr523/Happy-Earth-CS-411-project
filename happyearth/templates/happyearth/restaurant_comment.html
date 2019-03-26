@@ -1,0 +1,41 @@
+{% if user.is_authenticated%}
+<h2>Hello, {{ user_info.name }}.</h2>
+<h5>Your phone is {{ user_info.phone }}.</h5>
+{% endif %}
+
+<h2>Restaurant: {{ restaurant.name }}.</h2>
+<h5>Address: {{ restaurant.address }}</h5>
+<h5>Price Level: {{ restaurant.price_level }}</h5>
+
+{% if user.is_authenticated%}
+<form action="." method="post">
+{% csrf_token %}
+    <select name="rating" size="5">
+        <option value="5" selected>5</option>
+        <option value="4" selected>4</option>
+        <option value="3" selected>3</option>
+        <option value="2" selected>2</option>
+        <option value="1" selected>1</option>
+        </select>
+    {% if dishes %}
+    <select name="dish" size="5">
+    <option value="" selected >NULL</option>
+    {% for i in dishes %}
+    <option value="{{ i.id }}" >{{i.name}}</option>
+    {% endfor %}
+    </select>
+    {% endif %}
+    <br>
+    <textarea name="review" rows="10" cols="30">
+Please write your review.
+</textarea><br>
+    
+<input type="submit" value="comment">
+</form>
+{% endif %}
+
+{% if user.is_authenticated%}
+<p><a href="{% url 'logout' %}">logout</a></p>
+{% else %}
+<p><a href="{% url 'login' %}">login</a></p>
+{% endif %}
