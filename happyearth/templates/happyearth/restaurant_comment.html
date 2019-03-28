@@ -1,8 +1,6 @@
-{% if user.is_authenticated%}
-<h2>Hello, {{ user_info.name }}.</h2>
-<h5>Your phone is {{ user_info.phone }}.</h5>
-{% endif %}
+{% extends 'happyearth/base.html' %}
 
+{% block content %}
 <h2>Restaurant: {{ restaurant.name }}.</h2>
 <h5>Address: {{ restaurant.address }}</h5>
 <h5>Price Level: {{ restaurant.price_level }}</h5>
@@ -33,9 +31,4 @@ Please write your review.
 <input type="submit" value="comment">
 </form>
 {% endif %}
-
-{% if user.is_authenticated%}
-<p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-<p><a href="{% url 'login' %}">login</a></p>
-{% endif %}
+{% endblock %}

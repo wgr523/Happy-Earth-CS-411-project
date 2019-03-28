@@ -1,4 +1,5 @@
-<h2>Hello, {{ user_info.name }}.</h2>
-<h5>Your phone is {{ user_info.phone }}.</h5>
+{% extends 'happyearth/base.html' %}
+
+{% block content %}
 <li><a href="favorites">Favorites</a></li>
-<p><a href="{% url 'logout' %}">logout</a></p>
+{% endblock %}
