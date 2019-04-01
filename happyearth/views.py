@@ -56,7 +56,7 @@ def user_favorites_tag(request, tag):
             c.execute('SELECT r.id, r.name, r.address FROM happyearth_favorites f, happyearth_restaurant r WHERE f.user_id=%s AND f.tag=%s AND r.id=f.restaurant_id;', [username, tag])
             restaurants = dictfetchall(c)
         context = {'user_info': user_info, 'restaurants': restaurants}
-        return render(request, 'happyearth/user_favorites_tag.html', context)
+        return render(request, 'happyearth/restaurant_list.html', context)
     else:
         return HttpResponseRedirect(reverse('login'))
 
@@ -133,27 +133,52 @@ def restaurant_id_favorite(request, rid):
             with connection.cursor() as c:
                 c.execute('INSERT IGNORE INTO happyearth_favorites (user_id, restaurant_id, tag) VALUES (%s, %s, %s);', [user_info['name'], rid, 'default'])
         return HttpResponseRedirect(reverse('user favorites'))
-        ## Process comment ends
+        ## Process ends
     else:
         return HttpResponseRedirect(reverse('login'))
 
+def search_result(request):
+    if request.method.upper() == "GET":
+        try:
+            if 'restaurant' in request.GET:
+                r = request.GET['restaurant']
+            else:
+                r = ''
+            if 'address' in request.GET:
+                a = request.GET['address']
+            else:
+                a = None
+        except:
+            return HttpResponse("err")
+        with connection.cursor() as c:
+            c.execute('SELECT id, name, address FROM happyearth_restaurant WHERE name LIKE %s;', [r'%'+r+r'%'])
+            restaurants = dictfetchall(c)
+        context = {'restaurants': restaurants}
+    if request.user.is_authenticated:
+        username = request.user.get_username()
+        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        if len(user)!=1:
+            return HttpResponse("No this user data.")
+        user_info = {"name":user[0].name, "phone":user[0].phone}
+        context.update({'user_info': user_info})
+    return render(request, 'happyearth/restaurant_list.html', context)
+
 class RestaurantIndex(generic.ListView):
-    context_object_name = 'restaurant_list'
+    context_object_name = 'r'
     def get_queryset(self):
-        """Return the last five published questions."""
         return Restaurant.objects.values()
 
 class UserIndex(generic.ListView):
-    context_object_name = 'user_list'
+    context_object_name = 'u'
     def get_queryset(self):
         return User.objects.values()
     
 class DishIndex(generic.ListView):
-    context_object_name = 'dish_list'
+    context_object_name = 'd'
     def get_queryset(self):
         return Dish.objects.values()
     
 class FavoritesIndex(generic.ListView):
-    context_object_name = 'favorites_list'
+    context_object_name = 'f'
     def get_queryset(self):
         return Favorites.objects.values()

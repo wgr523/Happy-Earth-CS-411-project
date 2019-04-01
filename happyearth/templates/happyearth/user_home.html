@@ -2,4 +2,10 @@
 
 {% block content %}
 <li><a href="favorites">Favorites</a></li>
+<br>
+<form action="/search/" method="get">
+  Search restaurant:
+  <input type="text" name="restaurant"><br>
+    <input type="submit" value="Search">
+</form>
 {% endblock %}

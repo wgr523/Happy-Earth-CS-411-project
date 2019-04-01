@@ -14,6 +14,7 @@ urlpatterns = [
         path('restaurant/<rid>/', views.restaurant_id, name='restaurant'),
         path('restaurant/<rid>/comment/', views.restaurant_id_comment, name='restaurant comment'),
         path('restaurant/<rid>/favorite/', views.restaurant_id_favorite, name='add restaurant to favorite'),
+        path('search/', views.search_result, name='search result'),
         #path('account/', include('django.contrib.auth.urls'), name='account'),
         path('r', views.RestaurantIndex.as_view(), name='restaurant index'),
         path('u', views.UserIndex.as_view(), name='user index'),

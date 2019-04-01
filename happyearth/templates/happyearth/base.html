@@ -1,5 +1,8 @@
+<html>
+<body style="background-color:powderblue;">
+<img src = "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg" alt = "what" width = "50" height = "60">
 {% if user.is_authenticated %}
-<h2>Hello, {{ user_info.name }}.</h2>
+<h2 style="color:Tomato;">Hello, {{ user_info.name }}.</h2>
 <h5>Your phone is {{ user_info.phone }}.</h5>
 {% endif %}
 {% block content %}
@@ -9,3 +12,5 @@
 {% else %}
 <p><a href="{% url 'login' %}">Login</a></p>
 {% endif %}
+</body>
+</html>
