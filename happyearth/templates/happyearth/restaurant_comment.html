@@ -15,14 +15,8 @@
         <option value="2" selected>2</option>
         <option value="1" selected>1</option>
         </select>
-    {% if dishes %}
-    <select name="dish" size="5">
-    <option value="" selected >NULL</option>
-    {% for i in dishes %}
-    <option value="{{ i.id }}" >{{i.name}}</option>
-    {% endfor %}
-    </select>
-    {% endif %}
+    <br>
+If you want, you can type dish name: (TODO).<input type="text" name="dish" value="">
     <br>
     <textarea name="review" rows="10" cols="30">
 Please write your review.

@@ -17,13 +17,12 @@ def fake_index(request):
 def user_home(request):
     if request.user.is_authenticated:
         username = request.user.get_username()
-        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
-#user must fill in the phone, we must update database
-            #user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+#user must fill in the city, state, we must update database
             #return HttpResponseRedirect('.')
             return HttpResponse('No user data!')
-        user_info = {"name":user[0].name, "phone":user[0].phone}
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         context = {'user_info': user_info}
         return render(request, 'happyearth/user_home.html', context)
     else:
@@ -32,10 +31,10 @@ def user_home(request):
 def user_favorites(request):
     if request.user.is_authenticated:
         username = request.user.get_username()
-        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
             return HttpResponse("No this user data.")
-        user_info = {"name":user[0].name, "phone":user[0].phone}
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         with connection.cursor() as c:
             c.execute('SELECT DISTINCT tag FROM happyearth_favorites WHERE user_id=%s;', [username])
             tags = dictfetchall(c)
@@ -48,10 +47,10 @@ def user_favorites(request):
 def user_favorites_tag(request, tag):
     if request.user.is_authenticated:
         username = request.user.get_username()
-        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
             return HttpResponse("No this user data.")
-        user_info = {"name":user[0].name, "phone":user[0].phone}
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         with connection.cursor() as c:
             c.execute('SELECT r.id, r.name, r.address FROM happyearth_favorites f, happyearth_restaurant r WHERE f.user_id=%s AND f.tag=%s AND r.id=f.restaurant_id;', [username, tag])
             restaurants = dictfetchall(c)
@@ -70,10 +69,10 @@ def restaurant_id(request, rid):
         context = {'dishes': d, 'restaurant': r}
     if request.user.is_authenticated:
         username = request.user.get_username()
-        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
             return HttpResponse("No this user data.")
-        user_info = {"name":user[0].name, "phone":user[0].phone}
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         with connection.cursor() as c:
             c.execute('SELECT c.date, c.rating, c.review FROM happyearth_comment c, happyearth_restaurant r WHERE c.user_id=%s AND c.restaurant_id=r.id AND r.id=%s AND c.dish_id IS NULL;', [username, rid])
             comments = dictfetchall(c)
@@ -90,15 +89,15 @@ def restaurant_id(request, rid):
 def restaurant_id_comment(request, rid):
     if request.user.is_authenticated:
         username = request.user.get_username()
-        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
             return HttpResponse("No this user data.")
-        user_info = {"name":user[0].name, "phone":user[0].phone}
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         ## Below process comment
         if request.method.upper() == "POST":
             try:
                 rating = request.POST['rating']
-                dish = request.POST['dish']
+                dish = request.POST['dish']#TODO
                 review = request.POST['review']
                 date = datetime.datetime.now().strftime("%Y-%m-%d")
                 with connection.cursor() as c:
@@ -108,7 +107,7 @@ def restaurant_id_comment(request, rid):
                         c.execute('INSERT INTO happyearth_comment (dish_id, user_id, restaurant_id, rating, review, date) VALUES (%s, %s, %s, %s, %s, %s);', [dish, user_info['name'], rid, rating, review, date])
                 return HttpResponseRedirect('..')
             except:
-                return HttpResponse("err")
+                return HttpResponse("Error when creating comment.")
         ## Process comment ends
         with connection.cursor() as c:
             c.execute('SELECT name, address, price_level FROM happyearth_restaurant WHERE id=%s;', [rid])
@@ -124,10 +123,10 @@ def restaurant_id_comment(request, rid):
 def restaurant_id_favorite(request, rid):
     if request.user.is_authenticated:
         username = request.user.get_username()
-        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
             return HttpResponse("No this user data.")
-        user_info = {"name":user[0].name, "phone":user[0].phone}
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         ## Below process favorite
         if True:
             with connection.cursor() as c:
@@ -141,26 +140,30 @@ def search_result(request):
     if request.method.upper() == "GET":
         try:
             if 'restaurant' in request.GET:
-                r = request.GET['restaurant']
+                r = request.GET['restaurant'].lower()
             else:
                 r = ''
             if 'address' in request.GET:
-                a = request.GET['address']
+                a = request.GET['address'].lower()
             else:
-                a = None
+                a = ''
         except:
-            return HttpResponse("err")
-        with connection.cursor() as c:
-            c.execute('SELECT id, name, address FROM happyearth_restaurant WHERE name LIKE %s;', [r'%'+r+r'%'])
-            restaurants = dictfetchall(c)
-        context = {'restaurants': restaurants}
+            return HttpResponse("Error. Invalid GET request.")
     if request.user.is_authenticated:
         username = request.user.get_username()
-        user = User.objects.raw('SELECT name, phone FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
             return HttpResponse("No this user data.")
-        user_info = {"name":user[0].name, "phone":user[0].phone}
-        context.update({'user_info': user_info})
+        with connection.cursor() as c:
+            c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE city=%s AND state=%s AND lower(name) LIKE %s;', [user[0].city, user[0].state, r'%'+r+r'%'])# we only search restaurant in same city, state
+            restaurants = dictfetchall(c)
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
+        context= {'restaurants': restaurants, 'user_info': user_info}
+    else:
+        with connection.cursor() as c:
+            c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant name LIKE %s;', [r'%'+r+r'%'])
+            restaurants = dictfetchall(c)
+        context = {'restaurants': restaurants}
     return render(request, 'happyearth/restaurant_list.html', context)
 
 class RestaurantIndex(generic.ListView):
