@@ -5,7 +5,8 @@
 <h5>Address: {{ restaurant.address }}</h5>
 <h5>Price Level: {{ restaurant.price_level }}</h5>
 
-{% if user.is_authenticated%}
+
+<!-- {% if user.is_authenticated%}
 <div>
     {% if is_favorite%}
     <p>Favorited.</p>
@@ -14,7 +15,7 @@
     {% endif %}
 </div>
 {% endif %}
-<!-- {% if comments_dishes %}
+{% if comments_dishes %}
 <p>Your past dishes with comments.</p>
 <table>
     <tr>
@@ -48,6 +49,8 @@
         <th>{{ i.date }}</th>
         <th>{{ i.rating }}</th>
         <th>{{ i.review }}</th>
+        <th><a href="{{ i.id }}">Edit</a></th>
+        <th><a href="delete/{{ i.id }}">Delete</a></th>
     </tr>
     {% endfor %}
 </table>
@@ -72,8 +75,9 @@
 </table>
 {% endif %}
 </div>
-{% if user.is_authenticated%}
+<!-- {% if user.is_authenticated%}
 <p><a href="comment">Write comment.</a></p>
 <p><a href="edit">Edit comment.</a></p>
-{% endif %}
+{% endif %} -->
+<p><a href="..">Back.</a></p>
 {% endblock %}

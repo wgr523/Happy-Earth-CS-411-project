@@ -1,6 +1,33 @@
 <html>
+<head>
+	<meta charset="utf-8"> 
+	<title>happy eat where</title>
+	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+    .fakeimg {
+        height: 200px;
+         background: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <h1>Happy Eat Where</h1>
+  <p>-find your favorite food and restaurants!</p> 
+  
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-4">
+      <h2>About us</h2>
+    </div>
+
+<html>
 <body style="background-color:powderblue;">
-<img src = "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg" alt = "what" width = "50" height = "60">
 {% if user.is_authenticated %}
 <h2 style="color:Tomato;">Hello, {{ user_info.name }}.</h2>
 <h5>Your location is {{ user_info.city }}, {{ user_info.state }}.</h5>
@@ -14,3 +41,6 @@
 {% endif %}
 </body>
 </html>
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <p>If you have any questions, please feel free to contact us: happyearth 001-001-111</p>
+</div>

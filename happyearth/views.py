@@ -22,8 +22,11 @@ def user_home(request):
 #user must fill in the city, state, we must update database
             #return HttpResponseRedirect('.')
             return HttpResponse('No user data!')
+            return render(request, 'happyearth/user_info.html')
         user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         context = {'user_info': user_info}
+        #with connection.cursor() as c:
+        #    c.execute('INSERT INTO happyearth_user (user_id, city, state) VALUES (%s, %s, %s);', [user_info['name'], user_info['city'], user_info['state']])
         return render(request, 'happyearth/user_home.html', context)
     else:
         return HttpResponseRedirect(reverse('login'))
@@ -38,7 +41,6 @@ def user_favorites(request):
         with connection.cursor() as c:
             c.execute('SELECT DISTINCT tag FROM happyearth_favorites WHERE user_id=%s;', [username])
             tags = dictfetchall(c)
-        #favorites  = Favorites.objects.raw('SELECT DISTINCT restaurant_id, tag FROM happyearth_favorites, happyearth_restaurant WHERE user_id=%s AND restaurant_id = name;', [username])
         context = {'user_info': user_info, 'tags': tags}
         return render(request, 'happyearth/user_favorites.html', context)
     else:
@@ -66,6 +68,35 @@ def restaurant_id(request, rid):
         r['price_level'] = '$'*r['price_level']
         c.execute('SELECT d.name, s.price FROM happyearth_restaurant r, happyearth_dish d, happyearth_serve s WHERE r.id=%s AND s.restaurant_id=r.id AND s.dish_id=d.id AND s.available=True;', [rid])
         d = dictfetchall(c)
+        c.execute('SELECT c.date, c.rating, c.review FROM happyearth_comment c WHERE c.restaurant_id=%s AND c.dish_id IS NULL;', [rid])
+        comments = dictfetchall(c)
+        context = {'dishes': d, 'restaurant': r, 'comments': comments}
+    if request.user.is_authenticated:
+        username = request.user.get_username()
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        if len(user)!=1:
+            return HttpResponse("No this user data.")
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
+        with connection.cursor() as c:
+            #c.execute('SELECT c.date, c.rating, c.review FROM happyearth_comment c WHERE c.user_id=%s AND c.restaurant_id=%s AND c.dish_id IS NULL;', [username, rid])
+            #comments = dictfetchall(c)
+            #c.execute('SELECT d.name, c.date, c.rating, c.review FROM happyearth_comment c, happyearth_dish d WHERE c.user_id=%s AND c.restaurant_id=%s AND c.dish_id IS NOT NULL AND c.dish_id=d.id;', [username, rid])
+            #dishes = dictfetchall(c)
+            c.execute('SELECT * FROM happyearth_favorites WHERE user_id=%s AND restaurant_id=%s LIMIT 1;', [username, rid])
+            if len(c.fetchall())>0:
+                is_fav = True
+            else:
+                is_fav = False
+            context.update({'user_info': user_info, 'is_favorite': is_fav })
+    return render(request, 'happyearth/restaurant.html', context)
+
+def restaurant_id_edit(request, rid):
+    with connection.cursor() as c:
+        c.execute('SELECT name, address, price_level FROM happyearth_restaurant WHERE id=%s;', [rid])
+        r = dictfetchall(c)[0]
+        r['price_level'] = '$'*r['price_level']
+        c.execute('SELECT d.name, s.price FROM happyearth_restaurant r, happyearth_dish d, happyearth_serve s WHERE r.id=%s AND s.restaurant_id=r.id AND s.dish_id=d.id AND s.available=True;', [rid])
+        d = dictfetchall(c)
         context = {'dishes': d, 'restaurant': r}
     if request.user.is_authenticated:
         username = request.user.get_username()
@@ -74,17 +105,17 @@ def restaurant_id(request, rid):
             return HttpResponse("No this user data.")
         user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         with connection.cursor() as c:
-            c.execute('SELECT c.date, c.rating, c.review FROM happyearth_comment c, happyearth_restaurant r WHERE c.user_id=%s AND c.restaurant_id=r.id AND r.id=%s AND c.dish_id IS NULL;', [username, rid])
+            c.execute('SELECT c.id, c.date, c.rating, c.review FROM happyearth_comment c WHERE c.user_id=%s AND c.restaurant_id=%s AND c.dish_id IS NULL;', [username, rid])
             comments = dictfetchall(c)
-            c.execute('SELECT d.name, c.date, c.rating, c.review FROM happyearth_comment c, happyearth_restaurant r, happyearth_dish d WHERE c.user_id=%s AND c.restaurant_id=r.id AND r.id=%s AND c.dish_id IS NOT NULL AND c.dish_id=d.id;', [username, rid])
-            dishes = dictfetchall(c)
+            #c.execute('SELECT d.name, c.date, c.rating, c.review FROM happyearth_comment c, happyearth_dish d WHERE c.user_id=%s AND c.restaurant_id=%s AND c.dish_id IS NOT NULL AND c.dish_id=d.id;', [username, rid])
+            #dishes = dictfetchall(c)
             c.execute('SELECT * FROM happyearth_favorites WHERE user_id=%s AND restaurant_id=%s LIMIT 1;', [username, rid])
             if len(c.fetchall())>0:
                 is_fav = True
             else:
                 is_fav = False
-            context.update({'user_info': user_info, 'comments': comments, 'comments_dishes': dishes, 'is_favorite': is_fav })
-    return render(request, 'happyearth/restaurant.html', context)
+            context.update({'user_info': user_info, 'is_favorite': is_fav ,'comments': comments})
+    return render(request, 'happyearth/restaurant_edit.html', context)
 
 def restaurant_id_comment(request, rid):
     if request.user.is_authenticated:
@@ -97,7 +128,7 @@ def restaurant_id_comment(request, rid):
         if request.method.upper() == "POST":
             try:
                 rating = request.POST['rating']
-                dish = request.POST['dish']#TODO
+                dish = ""#request.POST['dish']#TODO
                 review = request.POST['review']
                 date = datetime.datetime.now().strftime("%Y-%m-%d")
                 with connection.cursor() as c:
@@ -120,6 +151,59 @@ def restaurant_id_comment(request, rid):
     else:
         return HttpResponseRedirect(reverse('login'))
 
+def restaurant_id_edit_comment(request, rid, cid):
+    if request.user.is_authenticated:
+        username = request.user.get_username()
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        if len(user)!=1:
+            return HttpResponse("No this user data.")
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
+        ## Below process comment
+        if request.method.upper() == "POST":
+            try:
+                rating = request.POST['rating']
+                dish = ""#request.POST['dish']#TODO
+                review = request.POST['review']
+                date = datetime.datetime.now().strftime("%Y-%m-%d")
+                with connection.cursor() as c:
+                    if dish == "":
+                        c.execute('UPDATE happyearth_comment SET rating=%s, review=%s, date=%s WHERE id=%s AND user_id=%s;', [rating, review, date, cid, user_info['name']])
+                    else:
+                        c.execute('UPDATE happyearth_comment SET dish_id=%s, rating=%s, review=%s, date=%s WHERE id=%s AND user_id=%s;', [dish, rating, review, date, cid, user_info['name']])
+                return HttpResponseRedirect('..')
+            except:
+                return HttpResponse("Error when editing comment.")
+        ## Process comment ends
+        with connection.cursor() as c:
+            c.execute('SELECT name, address, price_level FROM happyearth_restaurant WHERE id=%s;', [rid])
+            r = dictfetchall(c)[0]
+            r['price_level'] = '$'*r['price_level']
+            c.execute('SELECT d.id, d.name, s.price FROM happyearth_restaurant r, happyearth_dish d, happyearth_serve s WHERE r.id=%s AND s.restaurant_id=r.id AND s.dish_id=d.id AND s.available=True;', [rid])
+            d = dictfetchall(c)
+            c.execute('SELECT rating, review, dish_id FROM happyearth_comment WHERE id=%s;', [cid])
+            comment = dictfetchall(c)
+            if len(comment)!=1:
+                return HttpResponse("No such comment.")
+#             return HttpResponse(str(comment))
+            context = {'user_info': user_info, 'dishes': d, 'restaurant': r, 'comment': comment[0]}
+        return render(request, 'happyearth/restaurant_comment.html', context)
+    else:
+        return HttpResponseRedirect(reverse('login'))
+def restaurant_id_delete_comment(request, rid, cid):
+    if request.user.is_authenticated:
+        username = request.user.get_username()
+        user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
+        if len(user)!=1:
+            return HttpResponse("No this user data.")
+        user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
+        try:
+            with connection.cursor() as c:
+                c.execute('DELETE FROM happyearth_comment WHERE id=%s AND user_id=%s;', [cid, user_info['name']])
+        except:
+            return HttpResponse("Error when deleting comment.")
+        return HttpResponseRedirect('../..')
+    else:
+        return HttpResponseRedirect(reverse('login'))
 def restaurant_id_favorite(request, rid):
     if request.user.is_authenticated:
         username = request.user.get_username()
