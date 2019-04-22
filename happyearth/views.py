@@ -189,6 +189,7 @@ def restaurant_id_edit_comment(request, rid, cid):
         return render(request, 'happyearth/restaurant_comment.html', context)
     else:
         return HttpResponseRedirect(reverse('login'))
+    
 def restaurant_id_delete_comment(request, rid, cid):
     if request.user.is_authenticated:
         username = request.user.get_username()
@@ -204,6 +205,7 @@ def restaurant_id_delete_comment(request, rid, cid):
         return HttpResponseRedirect('../..')
     else:
         return HttpResponseRedirect(reverse('login'))
+    
 def restaurant_id_favorite(request, rid):
     if request.user.is_authenticated:
         username = request.user.get_username()
@@ -215,7 +217,9 @@ def restaurant_id_favorite(request, rid):
         if True:
             with connection.cursor() as c:
                 c.execute('INSERT IGNORE INTO happyearth_favorites (user_id, restaurant_id, tag) VALUES (%s, %s, %s);', [user_info['name'], rid, 'default'])
-        return HttpResponseRedirect(reverse('user favorites'))
+                c.execute('CALL InsertRecommendRestaurant(%s, %s);', [user_info['name'], rid])
+                c.execute('CALL InsertRecommendRestaurant2(%s, %s);', [user_info['name'], rid])
+        return HttpResponseRedirect('..')
         ## Process ends
     else:
         return HttpResponseRedirect(reverse('login'))

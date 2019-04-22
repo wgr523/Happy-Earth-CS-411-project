@@ -65,3 +65,9 @@ class Serve(models.Model):
     available = models.BooleanField(default=True)
     class Meta:
         unique_together = ('dish', 'restaurant')
+
+class Recommend(models.Model):
+    user = models.ForeignKey('User', on_delete = models.CASCADE)
+    restaurant = models.ForeignKey('Restaurant', on_delete = models.CASCADE)
+    class Meta:
+        unique_together = ('user', 'restaurant')
