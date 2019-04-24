@@ -18,6 +18,7 @@ urlpatterns = [
         path('restaurant/<rid>/edit/delete/<cid>/', views.restaurant_id_delete_comment, name='restaurant delete comment'),
         path('restaurant/<rid>/favorite/', views.restaurant_id_favorite, name='add restaurant to favorite'),
         path('search/', views.search_result, name='search result'),
+        path('together/', views.user_together, name='eat together'),
         #path('account/', include('django.contrib.auth.urls'), name='account'),
         #path('r', views.RestaurantIndex.as_view(), name='restaurant index'),
         #path('u', views.UserIndex.as_view(), name='user index'),

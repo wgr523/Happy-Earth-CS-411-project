@@ -1,0 +1,38 @@
+<html>
+<head>
+    {% if refresh %}
+    <meta http-equiv="refresh" content="3">
+    {% endif %}
+</head>
+<body>
+
+<h2>Now recommending restaurants with your friends.</h2>
+<br>
+<div>
+    <h2>Friends</h2>
+{% if friends %}
+<ul>
+    {% for i in friends %}
+        <li>{{ i.user_id }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No friends found.</p>
+{% endif %}
+    </div>
+    
+<div>
+    <h2>Recommendation</h2>
+{% if restaurants %}
+<ul>
+    {% for i in restaurants %}
+        <li><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}, {{ i.city }}, {{ i.state }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No recommendation for you and your friends, sorry.</p>
+{% endif %}
+</div>
+
+    </body>
+</html>

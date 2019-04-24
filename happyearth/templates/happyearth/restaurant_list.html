@@ -5,7 +5,7 @@
 {% if restaurants %}
 <ul>
     {% for i in restaurants %}
-        <li><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}</a></li>
+        <li><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}, {{ i.city }}, {{ i.state }}</a></li>
     {% endfor %}
 </ul>
 {% else %}

@@ -71,3 +71,7 @@ class Recommend(models.Model):
     restaurant = models.ForeignKey('Restaurant', on_delete = models.CASCADE)
     class Meta:
         unique_together = ('user', 'restaurant')
+
+class Together(models.Model):
+    user = models.ForeignKey('User', on_delete = models.CASCADE, unique = True)
+    code = models.IntegerField()

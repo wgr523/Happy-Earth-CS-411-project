@@ -18,7 +18,7 @@
     <br>
 <!-- If you want, you can type dish name: (TODO).<input type="text" name="dish" value=""> -->
     <br>
-    <textarea name="review" rows="10" cols="30">{% if comment %}{{ comment.review }}{% else %}Please write your review.{% endif %}</textarea><br>
+    <textarea name="review" rows="10" cols="30" maxlength=500>{% if comment %}{{ comment.review }}{% else %}Please write your review. (500 characters limit){% endif %}</textarea><br>
     
 <input type="submit" value="{% if comment %}Edit{% else %}Comment{% endif %}">
 </form>
