@@ -39,7 +39,7 @@ class User(models.Model):
     reg_date = models.DateField()
     
 class Dish(models.Model):
-    name =  models.CharField(max_length=50)
+    name =  models.CharField(max_length=50, primary_key=True)
     description = models.CharField(max_length=500, blank=True)
     
 class Favorites(models.Model):
@@ -60,9 +60,9 @@ class Comment(models.Model):
 class Serve(models.Model):
     dish = models.ForeignKey('Dish', on_delete = models.CASCADE)
     restaurant = models.ForeignKey('Restaurant', on_delete = models.CASCADE)
-    size = models.IntegerField(blank=True, default=1)
-    price = models.CharField(max_length=20)
-    available = models.BooleanField(default=True)
+    #size = models.IntegerField(blank=True, default=1)
+    #price = models.CharField(max_length=20)
+    #available = models.BooleanField(default=True)
     class Meta:
         unique_together = ('dish', 'restaurant')
 

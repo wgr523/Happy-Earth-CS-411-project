@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>Restaurant: {{ restaurant.name }}.</h2>
-<h5>Address: {{ restaurant.address }}</h5>
+<h5>Address: {{ restaurant.address }}, {{ restaurant.city }}, {{ restaurant.state }}</h5>
 <h5>Price Level: {{ restaurant.price_level }}</h5>
 
 {% if user.is_authenticated%}
@@ -14,25 +14,6 @@
     {% endif %}
 </div>
 {% endif %}
-<!-- {% if comments_dishes %}
-<p>Your past dishes with comments.</p>
-<table>
-    <tr>
-        <th>Dish</th>
-        <th>Date</th>
-        <th>Rating</th>
-        <th>Review</th>
-    </tr>
-    {% for i in comments_dishes %}
-    <tr>
-        <th>{{ i.name }}</th>
-        <th>{{ i.date }}</th>
-        <th>{{ i.rating }}</th>
-        <th>{{ i.review }}</th>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %} -->
 
 <div>
 {% if comments %}
@@ -52,24 +33,37 @@
     {% endfor %}
 </table>
 {% endif %}
+    
+{% if comments_dishes %}
+<p>Your past dishes with comments.</p>
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Rating</th>
+        <th>Review</th>
+        <th>Dish</th>
+    </tr>
+    {% for i in comments_dishes %}
+    <tr>
+        <th>{{ i.date }}</th>
+        <th>{{ i.rating }}</th>
+        <th>{{ i.review }}</th>
+        <th>{{ i.dish_id }}</th>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %} 
 </div>
 
 
 <div>
 {% if dishes %}
-<p>All dishes.</p>
-<table>
-    <tr>
-        <th>Dish</th>
-        <th>Price</th>
-    </tr>
+<p>All recorded dishes of this restaurant.</p>
+<ul>
     {% for i in dishes %}
-    <tr>
-        <th>{{ i.name }}</th>
-        <th>{{ i.price }}</th>
-    </tr>
+        <li>{{ i.dish_id }}</li>
     {% endfor %}
-</table>
+</ul>
 {% endif %}
 </div>
 {% if user.is_authenticated%}

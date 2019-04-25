@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>Restaurant: {{ restaurant.name }}.</h2>
-<h5>Address: {{ restaurant.address }}</h5>
+<h5>Address: {{ restaurant.address }}, {{ restaurant.city }}, {{ restaurant.state }}</h5>
 <h5>Price Level: {{ restaurant.price_level }}</h5>
 
 {% if user.is_authenticated%}
@@ -16,9 +16,9 @@
         <option value="1" {% if comment and comment.rating == 1 %}selected{% endif %}>1</option>
         </select>
     <br>
-<!-- If you want, you can type dish name: (TODO).<input type="text" name="dish" value=""> -->
+If you want, you can check this and type the dish name.<input type="checkbox" name="is_dish" value="true" {% if comment and comment.dish_id %}checked{% endif %}><input type="text" name="dish" value="{% if comment and comment.dish_id %}{{ comment.dish_id }}{% endif %}">
     <br>
-    <textarea name="review" rows="10" cols="30" maxlength=500>{% if comment %}{{ comment.review }}{% else %}Please write your review. (500 characters limit){% endif %}</textarea><br>
+    <textarea name="review" rows="10" cols="80" maxlength=500>{% if comment %}{{ comment.review }}{% else %}Please write your review. (500 characters limit){% endif %}</textarea><br>
     
 <input type="submit" value="{% if comment %}Edit{% else %}Comment{% endif %}">
 </form>

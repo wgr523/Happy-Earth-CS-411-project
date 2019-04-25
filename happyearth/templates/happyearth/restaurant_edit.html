@@ -2,7 +2,7 @@
 
 {% block content %}
 <h2>Restaurant: {{ restaurant.name }}.</h2>
-<h5>Address: {{ restaurant.address }}</h5>
+<h5>Address: {{ restaurant.address }}, {{ restaurant.city }}, {{ restaurant.state }}</h5>
 <h5>Price Level: {{ restaurant.price_level }}</h5>
 
 
@@ -15,25 +15,7 @@
     {% endif %}
 </div>
 {% endif %}
-{% if comments_dishes %}
-<p>Your past dishes with comments.</p>
-<table>
-    <tr>
-        <th>Dish</th>
-        <th>Date</th>
-        <th>Rating</th>
-        <th>Review</th>
-    </tr>
-    {% for i in comments_dishes %}
-    <tr>
-        <th>{{ i.name }}</th>
-        <th>{{ i.date }}</th>
-        <th>{{ i.rating }}</th>
-        <th>{{ i.review }}</th>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %} -->
+-->
 
 <div>
 {% if comments %}
@@ -55,26 +37,30 @@
     {% endfor %}
 </table>
 {% endif %}
-</div>
-
-
-<div>
-{% if dishes %}
-<p>All dishes.</p>
+    
+    {% if comments_dishes %}
+<p>Your past dishes with comments.</p>
 <table>
     <tr>
+        <th>Date</th>
+        <th>Rating</th>
+        <th>Review</th>
         <th>Dish</th>
-        <th>Price</th>
     </tr>
-    {% for i in dishes %}
+    {% for i in comments_dishes %}
     <tr>
-        <th>{{ i.name }}</th>
-        <th>{{ i.price }}</th>
+        <th>{{ i.date }}</th>
+        <th>{{ i.rating }}</th>
+        <th>{{ i.review }}</th>
+        <th>{{ i.dish_id }}</th>
+         <th><a href="{{ i.id }}">Edit</a></th>
+        <th><a href="delete/{{ i.id }}">Delete</a></th>
     </tr>
     {% endfor %}
 </table>
-{% endif %}
+{% endif %} 
 </div>
+
 <!-- {% if user.is_authenticated%}
 <p><a href="comment">Write comment.</a></p>
 <p><a href="edit">Edit comment.</a></p>

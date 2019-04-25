@@ -15,14 +15,14 @@
     <h2>Eat together: Please enter a 4-digit code</h2>
 <form action="/together/" method="post">
     {% csrf_token %}
-  <input type="text" name="code"><br>
+  <input type="text" name="code" value="1234"><br>
     <input type="submit" value="Submit">
 </form>
 </div>
 <br>
 
 <div>
-    <h2>Your Recommendation</h2>
+    <h2>Your Recommendation</h2><a href="/recommend-remove-all/">Clear All Recommendation At Current Location</a>
 {% if restaurants %}
 <ul>
     {% for i in restaurants %}
