@@ -3,9 +3,9 @@
 {% block content %}
 <br>
 <form action="." method="post">
-  <p>City: <input type="text" name="cname" value="Urbana"/></p>
-  <p>State: <input type="text" name="sname" value="IL"/></p>
-  <p>Register date: <input type="date" name="rname" /></p>
+  {% csrf_token %}
+  <p>City: <input type="text" name="city" value="Urbana"/></p>
+  <p>State: <input type="text" name="state" value="IL"/></p>
   <input type="submit" value="Submit" />
 </form>
 {% endblock %}

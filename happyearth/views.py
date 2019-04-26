@@ -32,6 +32,15 @@ def fake_index(request):
 def user_home(request):
     if request.user.is_authenticated:
         username = request.user.get_username()
+        if request.method.upper() == "POST":
+            try:
+                city = request.POST['city']
+                state = request.POST['state']
+                date = datetime.datetime.now().strftime("%Y-%m-%d")
+                with connection.cursor() as c:
+                    c.execute('INSERT IGNORE INTO happyearth_user (name, city, state, reg_date) VALUES (%s, %s, %s, %s);', [username, city, state, date])
+            except:
+                return HttpResponse("Error. Invalid POST request.")        
         user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
 #user must fill in the city, state, we must update database
@@ -39,8 +48,6 @@ def user_home(request):
             #return HttpResponse('No user data!')
             return render(request, 'happyearth/user_info.html')
         user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
-        #with connection.cursor() as c:
-        #    c.execute('INSERT INTO happyearth_user (user_id, city, state) VALUES (%s, %s, %s);', [user_info['name'], user_info['city'], user_info['state']])
         with connection.cursor() as c:
             c.execute('SELECT r.id, r.name, r.address, r.city, r.state FROM happyearth_restaurant AS r, happyearth_recommend as l WHERE l.user_id=%s AND l.restaurant_id = r.id;', [user[0].name])
             restaurants = dictfetchall(c)
