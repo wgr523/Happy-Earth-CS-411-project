@@ -49,11 +49,11 @@ def user_home(request):
             return render(request, 'happyearth/user_info.html')
         user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         with connection.cursor() as c:
-            c.execute('SELECT r.id, r.name, r.address, r.city, r.state FROM happyearth_restaurant AS r, happyearth_recommend as l WHERE l.user_id=%s AND l.restaurant_id = r.id;', [user[0].name])
+            c.execute('SELECT r.id, r.name, r.address, r.city, r.state FROM happyearth_restaurant AS r, happyearth_recommend as l WHERE l.user_id=%s AND l.restaurant_id = r.id AND r.city = %s AND r.state = %s;', [user_info['name'], user_info['city'], user_info['state']])
             restaurants = dictfetchall(c)
         context= {'restaurants': restaurants, 'user_info': user_info}
         return render(request, 'happyearth/user_home.html', context)
-    else:
+    else:#TODO: create a homepage with no user info
         return HttpResponseRedirect(reverse('login'))
 
 def user_favorites(request):
@@ -269,10 +269,10 @@ def search_result(request):
         user = User.objects.raw('SELECT name, city, state FROM happyearth_user WHERE name=%s LIMIT 1;', [username])
         if len(user)!=1:
             return HttpResponse("No this user data.")
-        with connection.cursor() as c:
-            c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE city=%s AND state=%s AND lower(name) LIKE %s AND lower(address) LIKE %s;', [user[0].city, user[0].state, r'%'+r+r'%', r'%'+a+r'%'])# we only search restaurant in same city, state
-            restaurants = dictfetchall(c)
         user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
+        with connection.cursor() as c:
+            c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE city=%s AND state=%s AND lower(name) LIKE %s AND lower(address) LIKE %s;', [user_info['city'], user_info['state'], r'%'+r+r'%', r'%'+a+r'%'])# we only search restaurant in same city, state
+            restaurants = dictfetchall(c)
         context= {'restaurants': restaurants, 'user_info': user_info}
     else:
         with connection.cursor() as c:
