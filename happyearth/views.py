@@ -326,3 +326,6 @@ def user_together(request):
         return render(request, 'happyearth/user_together.html', context)
     else:
         return HttpResponseRedirect(reverse('login'))
+    
+def clear_user(request):
+    return HttpResponseRedirect(reverse('homepage'))

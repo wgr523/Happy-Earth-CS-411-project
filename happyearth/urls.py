@@ -17,4 +17,5 @@ urlpatterns = [
         path('restaurant/<rid>/favorite/', views.restaurant_id_favorite, name='add restaurant to favorite'),
         path('search/', views.search_result, name='search result'),
         path('together/', views.user_together, name='eat together'),
+        path('user/clear/', views.clear_user, name='clear user'),
         ]
