@@ -1,5 +1,7 @@
 {% extends 'happyearth/base.html' %}
-
+{% block title %}
+Your Favorites
+{% endblock %}
 {% block content %}
 <div>
 {% if restaurants %}
@@ -12,4 +14,7 @@
 <p>No restaurant.</p>
 {% endif %}
 </div>
+{% endblock %}
+{% block go_back %}
+<a href="..">Back</a>
 {% endblock %}

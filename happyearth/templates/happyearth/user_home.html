@@ -1,7 +1,12 @@
 {% extends 'happyearth/base.html' %}
-
+{% block title %}
+Happy Eat Where homepage
+{% endblock %}
 {% block content %}
+
+{% if user.is_authenticated and user_info %}
 <h2><a href="favorites">My Favorites</a></h2>
+{% endif %}
 <br>
 <div>
     <h2>Search restaurant:</h2>
@@ -10,7 +15,7 @@
     <input type="submit" value="Search">
 </form>
 </div>
-
+{% if user.is_authenticated and user_info %}
 <div>
     <h2>Eat together: Please enter a 4-digit code</h2>
 <form action="/together/" method="post">
@@ -36,4 +41,5 @@
 <div>
 <a href="/user/clear/">Clear my user information.</a>
 </div>
+{% endif %}
 {% endblock %}

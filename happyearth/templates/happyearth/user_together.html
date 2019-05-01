@@ -1,12 +1,18 @@
-<html>
-<head>
+{% extends 'happyearth/base.html' %}
+{% block meta %}
     {% if refresh %}
     <meta http-equiv="refresh" content="3">
     {% endif %}
-</head>
-<body>
-
+{% endblock %}
+{% block title %}
+Eat Together with your friends!
+{% endblock %}
+{% block content %}
+{% if warning%}
+<h2>{{ warning }}</h2>
+{% else %}
 <h2>Now recommending restaurants with your friends.</h2>
+{% endif %}
 <br>
 <div>
     <h2>Friends</h2>
@@ -33,6 +39,7 @@
 <p>No recommendation for you and your friends, sorry.</p>
 {% endif %}
 </div>
-
-    </body>
-</html>
+{% endblock %}
+{% block go_back %}
+<a href="delete">Back</a>
+{% endblock %}

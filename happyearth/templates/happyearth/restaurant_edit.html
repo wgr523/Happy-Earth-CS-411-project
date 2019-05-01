@@ -1,21 +1,11 @@
 {% extends 'happyearth/base.html' %}
-
+{% block title %}
+Edit Comments
+{% endblock %}
 {% block content %}
 <h2>Restaurant: {{ restaurant.name }}.</h2>
 <h5>Address: {{ restaurant.address }}, {{ restaurant.city }}, {{ restaurant.state }}</h5>
 <h5>Price Level: {{ restaurant.price_level }}</h5>
-
-
-<!-- {% if user.is_authenticated%}
-<div>
-    {% if is_favorite%}
-    <p>Favorited.</p>
-    {% else %}
-    <p><a href="favorite">Add to favorites.</a></p>
-    {% endif %}
-</div>
-{% endif %}
--->
 
 <div>
 {% if comments %}
@@ -65,5 +55,8 @@
 <p><a href="comment">Write comment.</a></p>
 <p><a href="edit">Edit comment.</a></p>
 {% endif %} -->
-<p><a href="..">Back.</a></p>
+
+{% endblock %}
+{% block go_back %}
+<a href="..">Back</a>
 {% endblock %}

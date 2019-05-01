@@ -1,17 +1,17 @@
 {% extends 'happyearth/base.html' %}
 {% block title %}
-Your favorite restaurants
+Search Result
 {% endblock %}
 {% block content %}
 <div>
-{% if tags %}
+{% if restaurants %}
 <ul>
-    {% for i in tags %}
-        <li><a href="{{ i.tag }}/">{{ i.tag }}</a></li>
+    {% for i in restaurants %}
+        <li><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}, {{ i.city }}, {{ i.state }}</a></li>
     {% endfor %}
 </ul>
 {% else %}
-<p>No favorites are available.</p>
+<p>No restaurant.</p>
 {% endif %}
 </div>
 {% endblock %}

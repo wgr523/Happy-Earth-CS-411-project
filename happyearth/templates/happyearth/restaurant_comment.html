@@ -1,5 +1,7 @@
 {% extends 'happyearth/base.html' %}
-
+{% block title %}
+Write A Comment
+{% endblock %}
 {% block content %}
 <h2>Restaurant: {{ restaurant.name }}.</h2>
 <h5>Address: {{ restaurant.address }}, {{ restaurant.city }}, {{ restaurant.state }}</h5>
@@ -23,4 +25,7 @@ If you want, you can check this and type the dish name.<input type="checkbox" na
 <input type="submit" value="{% if comment %}Edit{% else %}Comment{% endif %}">
 </form>
 {% endif %}
+{% endblock %}
+{% block go_back %}
+<a href="..">Back</a>
 {% endblock %}

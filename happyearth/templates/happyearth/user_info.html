@@ -1,5 +1,7 @@
 {% extends 'happyearth/base.html' %}
-
+{% block title %}
+Edit your user information
+{% endblock %}
 {% block content %}
 <br>
 <form action="." method="post">
@@ -8,4 +10,7 @@
   <p>State: <input type="text" name="state" value="IL"/></p>
   <input type="submit" value="Submit" />
 </form>
+{% endblock %}
+{% block go_back %}
+<a href="{% url 'homepage' %}">Back</a>
 {% endblock %}
