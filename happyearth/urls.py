@@ -1,7 +1,8 @@
 from django.urls import path
 from django.urls import path, include # new
 from django.views.generic.base import TemplateView
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -20,4 +21,4 @@ urlpatterns = [
         path('together/delete/', views.user_together_delete, name='eat together delete'),
         path('user/edit/', views.edit_user, name='edit user'),
         path('user/clear/', views.clear_user, name='clear user'),
-        ]
+        ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

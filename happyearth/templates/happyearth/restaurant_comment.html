@@ -18,7 +18,8 @@ Write A Comment
         <option value="1" {% if comment and comment.rating == 1 %}selected{% endif %}>1</option>
         </select>
     <br>
-If you want, you can check this and type the dish name.<input type="checkbox" name="is_dish" value="true" {% if comment and comment.dish_id %}checked{% endif %}><input type="text" name="dish" value="{% if comment and comment.dish_id %}{{ comment.dish_id }}{% endif %}">
+If you want, you can check this and type the dish name.
+    <br><input type="checkbox" name="is_dish" value="true" {% if comment and comment.dish_id %}checked{% endif %}><input type="text" name="dish" value="{% if comment and comment.dish_id %}{{ comment.dish_id }}{% endif %}">
     <br>
     <textarea name="review" rows="10" cols="80" maxlength=500>{% if comment %}{{ comment.review }}{% else %}Please write your review. (500 characters limit){% endif %}</textarea><br>
     

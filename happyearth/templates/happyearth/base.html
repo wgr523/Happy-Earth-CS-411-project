@@ -1,38 +1,99 @@
+{% load static %}
 <html>
 <head>
 <meta charset="utf-8">
     <!-- This part is the title. -->
 <title>{% block title %}
 {% endblock %}</title>
-    <!-- This part is the other meta. -->
+<script src="{% static "js/jquery.min.js" %}"></script>
+		<script src="{% static "js/skel.min.js" %}"></script>
+		<script src="{% static "js/skel-layers.min.js" %}"></script>
+		<script src="{% static "js/init.js" %}"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+			<link rel="stylesheet" href="{% static "css/skel.css" %}" type="text/css" />
+			<link rel="stylesheet" href="{% static "css/style.css" %}" type="text/css" />
+			<link rel="stylesheet" href="{% static "css/style-xlarge.css" %}" type="text/css" />
+			<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    
+    
 {% block meta %}
 {% endblock %}
 </head>
 <body>
-
-<div>
-  <h1>Happy Eat Where</h1>
-  <p>- find your favorite food and restaurants! (some text here)</p> 
-</div>
-
-{% if user.is_authenticated and user_info %}
-<h2>Hello, {{ user_info.name }}.</h2>
-<h5>Your location is {{ user_info.city }}, {{ user_info.state }}.</h5>
-{% endif %}
-<!-- This part is the button "go back". -->
+    <header id="header" class="skel-layers-fixed">
+		<a id="brand" class="brand" href="{% url 'homepage' %}"><img src="{% static "images/Logo.png" %}" width="12%" height="auto" alt=""/></a>
+		<nav id="nav">
+			<ul>
+                <!-- This part is the button "go back". -->
+<li>
 {% block go_back %}
 {% endblock %}
+</li>
+						<li><a href="{% url 'homepage' %}">Home</a></li>
+						<li>{% if user.is_authenticated and user_info %}
+                            <a href="{% url 'user favorites' %}">My Favourites</a>
+                           {% endif %}
+                           </li>
+						<li>
+						{% if user.is_authenticated %}
+						<a href="{% url 'logout' %}" class="button btn-warning  btn-sm">Log out</a>
+						{% else %}
+						<a href="{% url 'login' %}" class="button btn-warning btn-sm">Log in</a>
+						{% endif %}
+						</li>
+
+					</ul>
+				</nav>
+		</header>
+<div class="container prefer">
+<!--   <h1>Happy Eat Where</h1>
+  <p>We help you find favorite food and restaurants! Begin your exploration with us!</p> 
+	<br /> -->
+{% if user.is_authenticated and user_info %}
+<h1>Hello, {{ user_info.name }}.</h1>
+<h5>Your location is {{ user_info.city }}, {{ user_info.state }}.</h5>
+{% endif %}
+    <br />
+
     
 <!-- This "block" is the content of every page. -->
 {% block content %}
 {% endblock %}
-
+</div>
 <!-- This part is the button login or logout. -->
-{% if user.is_authenticated %}
-<p><a href="{% url 'logout' %}">Logout</a></p>
-{% else %}
-<p><a href="{% url 'login' %}">Login</a></p>
-{% endif %}
-    
+    <footer id="footer">
+				<div class="container">
+					<div class="row double">
+						<div class="6u">
+							<div class="row collapse-at-2">
+							<div class="6u">
+									<h3>HAPPY EAT WHERE</h3>
+									<ul class="alt">
+<!-- 										<li><a href="user_home.html" target="_blank">About</a></li>
+										<li><a href="user_home.html" target="_blank">Website</a></li> -->
+									</ul>
+								</div>
+              
+								<div class="6u">
+									<h3>Contact as</h3>
+									<ul class="alt">
+										<li>Thomas M. Siebel Center for Computer Science</li>
+										<li>201 N Goodwin Ave </li>
+                                        <li>Urbana, IL 61801</li>
+                                        <li><strong>Phone: </strong>217.333.****</li>
+                                        <li><strong>Email: </strong>***[at]illinois.edu</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="6u">
+							<img src="{% static "images/Logo.png" %}" width="auto" height="80" alt=""/>
+							<p>HAPPY EAT WHERE aims to recommend food and restaurants for users based on their reviews and recorded favourites. It also allow a group of users to find their co-favourite restaurants when eating together.</p>
+						</div>
+					</div>
+				</div>
+			</footer>
 </body>
 </html>
