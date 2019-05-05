@@ -21,4 +21,5 @@ urlpatterns = [
         path('together/delete/', views.user_together_delete, name='eat together delete'),
         path('user/edit/', views.edit_user, name='edit user'),
         path('user/clear/', views.clear_user, name='clear user'),
+        path('clear-recommend/', views.clear_recommend, name='clear recommend'),
         ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

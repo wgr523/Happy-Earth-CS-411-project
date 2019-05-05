@@ -337,7 +337,6 @@ def user_together_delete(request):
         return HttpResponseRedirect(reverse('login'))
     
 def edit_user(request):
-    # TODO
     if request.user.is_authenticated:
         username = request.user.get_username()
         if request.method.upper() == "POST":
@@ -348,15 +347,22 @@ def edit_user(request):
                      c.execute('UPDATE happyearth_user SET city = %s, state = %s WHERE name = %s', [city, state, username])
                 return render(request, 'happyearth/user_home.html')
             except:
-                return HttpResponse("Error. Invalid POST request.") 
+                return HttpResponse("Error. Invalid POST request.")
         else:
-            render(request, 'happyearth/user_info.html')
-            
+            return render(request, 'happyearth/user_info.html')
+    else:
+        return HttpResponseRedirect(reverse('login'))
         
 def clear_user(request):
-    # TODO
     if request.user.is_authenticated:
         username = request.user.get_username()
         with connection.cursor() as c:
             c.execute('DELETE FROM happyearth_user WHERE name = %s', [username])
+    return HttpResponseRedirect(reverse('homepage'))
+
+def clear_recommend(request):
+    if request.user.is_authenticated:
+        username = request.user.get_username()
+        with connection.cursor() as c:
+            c.execute('DELETE FROM happyearth_recommend WHERE user_id = %s', [username])
     return HttpResponseRedirect(reverse('homepage'))

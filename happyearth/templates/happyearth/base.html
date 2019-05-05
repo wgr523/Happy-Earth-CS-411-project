@@ -33,9 +33,18 @@
 </li>
 						<li><a href="{% url 'homepage' %}">Home</a></li>
 						<li>{% if user.is_authenticated and user_info %}
-                            <a href="{% url 'user favorites' %}">My Favourites</a>
+<!--                             <a href="{% url 'user favorites' %}">My Favourites</a> -->
+                            <a href="favorites/default/">My Favourites</a>
                            {% endif %}
                            </li>
+                        <li>{% if user.is_authenticated and user_info %}
+                            <a href="{% url 'edit user' %}">Edit Account</a>
+                           {% endif %}
+                           </li>
+                <li>{% if user.is_authenticated and user_info %}
+<a href="clear user">Clear Account</a>
+                    {% endif %}
+</li>
 						<li>
 						{% if user.is_authenticated %}
 						<a href="{% url 'logout' %}" class="button btn-warning  btn-sm">Log out</a>
@@ -69,15 +78,15 @@
 						<div class="6u">
 							<div class="row collapse-at-2">
 							<div class="6u">
-									<h3>HAPPY EAT WHERE</h3>
+									<h5>HAPPY EAT WHERE</h5>
 									<ul class="alt">
-<!-- 										<li><a href="user_home.html" target="_blank">About</a></li>
-										<li><a href="user_home.html" target="_blank">Website</a></li> -->
+										<li><a href="{% url 'homepage' %}" target="_blank">About</a></li>
+										<li><a href="{% url 'homepage' %}" target="_blank">Website</a></li>
 									</ul>
 								</div>
               
 								<div class="6u">
-									<h3>Contact as</h3>
+									<h5>Contact as</h5>
 									<ul class="alt">
 										<li>Thomas M. Siebel Center for Computer Science</li>
 										<li>201 N Goodwin Ave </li>
@@ -90,7 +99,7 @@
 						</div>
 						<div class="6u">
 							<img src="{% static "images/Logo.png" %}" width="auto" height="80" alt=""/>
-							<p>HAPPY EAT WHERE aims to recommend food and restaurants for users based on their reviews and recorded favourites. It also allow a group of users to find their co-favourite restaurants when eating together.</p>
+							<p>HAPPY EAT WHERE aims to recommend food and restaurants for users based on their reviews and recorded favourites. It also allows a group of users to find their co-favourite restaurants when eating together.</p>
 						</div>
 					</div>
 				</div>
