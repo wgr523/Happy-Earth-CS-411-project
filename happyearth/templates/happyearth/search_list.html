@@ -5,11 +5,14 @@ Search Result
 {% block content %}
 <div>
 {% if restaurants %}
-<ul>
-    {% for i in restaurants %}
-        <li><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}, {{ i.city }}, {{ i.state }}</a></li>
+<table>
+{% for i in restaurants %}    
+        <tr>
+            {% if i.avg_rating %}<th>{{ i.avg_rating }}</th>{% endif %}
+        <th><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}, {{ i.city }}, {{ i.state }}</a></th>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 {% else %}
 <p>No restaurant.</p>
 {% endif %}

@@ -258,6 +258,7 @@ def search_result(request):
                 a = request.GET['address'].lower()
             else:
                 a = ''
+            rank_by_rating = 'rank' in request.GET
         except:
             return HttpResponse("Error. Invalid GET request.")
     if request.user.is_authenticated:
@@ -267,12 +268,18 @@ def search_result(request):
             return HttpResponse("No this user data.")
         user_info = {"name":user[0].name, "city":user[0].city, "state":user[0].state}
         with connection.cursor() as c:
-            c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE city=%s AND state=%s AND lower(name) LIKE %s AND lower(address) LIKE %s;', [user_info['city'], user_info['state'], r'%'+r+r'%', r'%'+a+r'%'])# we only search restaurant in same city, state
+            if rank_by_rating:
+                c.execute('SELECT r.id, r.name, r.address, r.city, r.state, n.avg_rating FROM happyearth_restaurant AS r, restaurant_rating AS n WHERE r.id = n.restaurant_id AND r.city=%s AND r.state=%s AND lower(r.name) LIKE %s AND lower(r.address) LIKE %s ORDER BY n.avg_rating DESC;', [user_info['city'], user_info['state'], r'%'+r+r'%', r'%'+a+r'%'])
+            else:
+                c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE city=%s AND state=%s AND lower(name) LIKE %s AND lower(address) LIKE %s;', [user_info['city'], user_info['state'], r'%'+r+r'%', r'%'+a+r'%'])# we only search restaurant in same city, state
             restaurants = dictfetchall(c)
         context= {'restaurants': restaurants, 'user_info': user_info}
     else:
         with connection.cursor() as c:
-            c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE lower(name) LIKE %s AND lower(address) LIKE %s LIMIT 100;', [r'%'+r+r'%', r'%'+a+r'%'])
+            if rank_by_rating:
+                c.execute('SELECT r.id, r.name, r.address, r.city, r.state, n.avg_rating FROM happyearth_restaurant AS r, restaurant_rating AS n WHERE r.id = n.restaurant_id AND lower(name) LIKE %s AND lower(address) LIKE %s ORDER BY n.avg_rating DESC LIMIT 100;', [r'%'+r+r'%', r'%'+a+r'%'])
+            else:
+                c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE lower(name) LIKE %s AND lower(address) LIKE %s LIMIT 100;', [r'%'+r+r'%', r'%'+a+r'%'])
             restaurants = dictfetchall(c)
         context = {'restaurants': restaurants}
     return render(request, 'happyearth/search_list.html', context)
@@ -307,21 +314,27 @@ def user_together(request):
                 if len(dictfetchall(c))!=1:
                     context = {'friends': friends, 'user_info': user_info, 'refresh': False, 'warning': 'Your friends are not in the same location with you!'}
                     return render(request, 'happyearth/user_together.html', context)
-            common_rid = set()
+            intersect_rid = set()
+            union_rid = set()
             for i, f in enumerate(friends):
                 c.execute('SELECT restaurant_id FROM happyearth_recommend WHERE user_id=%s;', [f['user_id']])
                 rids = dictfetchall(c)
                 l = [r['restaurant_id'] for r in rids]
                 if i == 0:
-                    common_rid.update(l)
+                    intersect_rid.update(l)
                 else:
-                    common_rid.intersection_update(l)
-            common_rid = list(common_rid)
-            if len(common_rid)>0:
-                c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE id IN %s AND city = %s AND state = %s;', [common_rid, user_info['city'], user_info['state']])
+                    intersect_rid.intersection_update(l)
+                union_rid.update(l)
+            union_rid = list(union_rid.difference(intersect_rid))
+            intersect_rid = list(intersect_rid)
+            if len(intersect_rid)>0:
+                c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE id IN %s AND city = %s AND state = %s;', [intersect_rid, user_info['city'], user_info['state']])
                 restaurants = dictfetchall(c)
             else:
                 restaurants = []
+            if len(union_rid)>0:
+                c.execute('SELECT id, name, address, city, state FROM happyearth_restaurant WHERE id IN %s AND city = %s AND state = %s;', [union_rid, user_info['city'], user_info['state']])
+                restaurants.extend(dictfetchall(c))
         context = {'friends': friends, 'user_info': user_info, 'refresh': True, 'restaurants': restaurants}
         return render(request, 'happyearth/user_together.html', context)
     else:
@@ -358,7 +371,7 @@ def clear_user(request):
         username = request.user.get_username()
         with connection.cursor() as c:
             c.execute('DELETE FROM happyearth_user WHERE name = %s', [username])
-    return HttpResponseRedirect(reverse('homepage'))
+    return HttpResponseRedirect(reverse('login'))
 
 def clear_recommend(request):
     if request.user.is_authenticated:
@@ -366,3 +379,10 @@ def clear_recommend(request):
         with connection.cursor() as c:
             c.execute('DELETE FROM happyearth_recommend WHERE user_id = %s', [username])
     return HttpResponseRedirect(reverse('homepage'))
+
+def user_favorites_remove(request, tag, rid):
+    if request.user.is_authenticated:
+        username = request.user.get_username()
+        with connection.cursor() as c:
+            c.execute('DELETE FROM happyearth_favorites WHERE user_id = %s AND tag = %s AND restaurant_id = %s;', [username, tag, rid])
+    return HttpResponseRedirect('../..')

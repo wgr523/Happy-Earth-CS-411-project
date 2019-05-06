@@ -11,8 +11,9 @@ Happy Eat Where homepage
 <div>
     <h2>Search restaurant:</h2>
 <form action="/search/" method="get">
-  <input type="text" name="restaurant"><br>
-    <input type="submit" value="Search">
+  Name: <input type="text" name="restaurant"><br>
+    Address: <input type="text" name="address"><br>
+    <input type="submit" value="Search">    <input type="checkbox" name="rank" value="true">Rank by Rating
 </form>
 </div>
 {% if user.is_authenticated and user_info %}

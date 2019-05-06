@@ -5,11 +5,15 @@ Your Favorites
 {% block content %}
 <div>
 {% if restaurants %}
-<ul>
-    {% for i in restaurants %}
-        <li><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}, {{ i.city }}, {{ i.state }}</a></li>
+    <table>
+{% for i in restaurants %}    
+        <tr>
+        <th><a href="/restaurant/{{ i.id }}/">{{ i.name }}, {{ i.address }}, {{ i.city }}, {{ i.state }}</a></th>
+        <th><a href="remove/{{ i.id }}">Remove</a></th>
+    </tr>
     {% endfor %}
-</ul>
+</table>
+
 {% else %}
 <p>No restaurant.</p>
 {% endif %}

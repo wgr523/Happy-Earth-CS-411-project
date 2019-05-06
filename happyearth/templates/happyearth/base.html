@@ -23,7 +23,7 @@
 </head>
 <body>
     <header id="header" class="skel-layers-fixed">
-		<a id="brand" class="brand" href="{% url 'homepage' %}"><img src="{% static "images/Logo.png" %}" width="12%" height="auto" alt=""/></a>
+		<a id="brand" class="brand" href="{% url 'homepage' %}"><img src="{% static "images/Logo.png" %}" width="12%" height="auto" alt="" style="margin-left:5%;"/></a>
 		<nav id="nav">
 			<ul>
                 <!-- This part is the button "go back". -->
@@ -42,10 +42,11 @@
                            {% endif %}
                            </li>
                 <li>{% if user.is_authenticated and user_info %}
-<a href="clear user">Clear Account</a>
+                    <a href="{% url 'clear user' %}">Clear Account</a>
                     {% endif %}
 </li>
 						<li>
+                         <a href="http://sp19-cs411-39.cs.illinois.edu:8000/accounts/signup/" class="button btn-warning  btn-sm">Sign up</a>
 						{% if user.is_authenticated %}
 						<a href="{% url 'logout' %}" class="button btn-warning  btn-sm">Log out</a>
 						{% else %}
